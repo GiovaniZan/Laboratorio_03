@@ -1,0 +1,105 @@
+###############################################################################
+#
+# IAR ELF Linker V9.10.2.313/W64 for ARM                  23/Jul/2021  09:50:23
+# Copyright 2007-2021 IAR Systems AB.
+#
+#    Output file  =
+#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out
+#    Map file     =
+#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\List\Teste_memoria_Kit.map
+#    Command line =
+#        -f
+#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out.rsp
+#        (D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj\asm.o
+#        --no_out_extension -o
+#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out
+#        --redirect _Printf=_PrintfFullNoMb --redirect _Scanf=_ScanfFullNoMb
+#        --map
+#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\List\Teste_memoria_Kit.map
+#        --config "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.0\arm\CONFIG\generic_cortex.icf" --semihosting --no_library_search
+#        --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at address 0x0 { ro section .intvec };
+"P1":  place in [from 0x0 to 0x7'ffff] { ro };
+define block CSTACK with size = 1K, alignment = 8 { };
+define block PROC_STACK with size = 0, alignment = 8 { };
+define block HEAP with size = 2K, alignment = 8 { };
+"P2":  place in [from 0x2000'0000 to 0x2000'ffff] {
+          rw, block CSTACK, block PROC_STACK, block HEAP };
+
+No sections matched the following patterns:
+
+  rw  in "P2"
+
+
+  Section   Kind         Address   Size  Object
+  -------   ----         -------   ----  ------
+"A0":                              0x40
+  .intvec   ro code          0x0   0x40  asm.o [1]
+                          - 0x40   0x40
+
+"P1":                               0x4
+  .text     ro code         0x40    0x2  asm.o [1]
+  .text     ro code         0x42    0x2  asm.o [1]
+                          - 0x44    0x4
+
+"P2":                             0x400
+  CSTACK             0x2000'0000  0x400  <Block>
+    CSTACK  uninit   0x2000'0000  0x400  <Block tail>
+                   - 0x2000'0400  0x400
+
+Unused ranges:
+
+         From           To      Size
+         ----           --      ----
+         0x44     0x7'ffff  0x7'ffbc
+  0x2000'0400  0x2000'ffff    0xfc00
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module          ro code  rw data
+    ------          -------  -------
+command line/config:
+    --------------------------------
+    Total:
+
+D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj: [1]
+    asm.o                68
+    --------------------------------
+    Total:               68
+
+    Linker created             1'024
+------------------------------------
+    Grand Total:         68    1'024
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                    Address  Size  Type      Object
+-----                    -------  ----  ----      ------
+CSTACK$$Base         0x2000'0000         --   Gb  - Linker created -
+CSTACK$$Limit        0x2000'0400         --   Gb  - Linker created -
+__iar_program_start         0x41        Code  Gb  asm.o [1]
+__vector_table               0x0        Data  Gb  asm.o [1]
+
+
+[1] = D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj
+
+     68 bytes of readonly  code memory
+  1'024 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

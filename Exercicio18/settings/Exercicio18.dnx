@@ -15,6 +15,81 @@
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
     </Trace1>
+    <PlDriver>
+        <FirstRun>0</FirstRun>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\TexasInstruments\TM4C129ENCPDT.ddf</MemConfigValue>
+    </PlDriver>
+    <ArmDriver>
+        <EnableCache>0</EnableCache>
+    </ArmDriver>
+    <LmiFtdiDriver>
+        <LMIFTDIserialNo>0F800C15</LMIFTDIserialNo>
+        <LMIFTDIfoundProbes />
+        <LmiFtdiResetStyle>0</LmiFtdiResetStyle>
+        <LmiFtdiResetStrategy>0</LmiFtdiResetStrategy>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <CStepIntDis>_ 0</CStepIntDis>
+    </LmiFtdiDriver>
+    <DebugChecksum>
+        <Checksum>2937974464</Checksum>
+    </DebugChecksum>
+    <Exceptions>
+        <StopOnUncaught>_ 0</StopOnUncaught>
+        <StopOnThrow>_ 0</StopOnThrow>
+    </Exceptions>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
+    <CallStack>
+        <ShowArgs>0</ShowArgs>
+    </CallStack>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
+    <CallStackLog>
+        <Enabled>0</Enabled>
+    </CallStackLog>
+    <CallStackStripe>
+        <ShowTiming>1</ShowTiming>
+    </CallStackStripe>
+    <Trace2>
+        <Enabled>0</Enabled>
+        <ShowSource>0</ShowSource>
+    </Trace2>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
+    <PlDdfRanges>
+        <ConfigRanges0>Memory ROM 16777216 520093696 1</ConfigRanges0>
+        <ConfigRanges1>Memory Periph1 1073741824 1048576 2</ConfigRanges1>
+        <ConfigRanges2>Memory Periph_BitBand 1107296256 33554432 2</ConfigRanges2>
+        <ConfigRanges3>Memory Periph2 1141047296 40960 2</ConfigRanges3>
+        <ConfigRanges4>Memory SystemSFR 3758096384 1048576 2</ConfigRanges4>
+        <ConfigRanges5>Memory Flash 0 1048576 1</ConfigRanges5>
+        <ConfigRanges6>Memory RAM 536870912 262144 0</ConfigRanges6>
+        <ConfigRanges7>Memory RAM_BitBand 570425344 8388608 0</ConfigRanges7>
+    </PlDdfRanges>
+    <PlCacheRanges>
+        <CustomRanges0>0 0 1048576 1 0</CustomRanges0>
+        <CustomRangesText0 />
+        <CustomRanges1>0 16777216 520093696 1 0</CustomRanges1>
+        <CustomRangesText1 />
+        <CustomRanges2>0 536870912 262144 0 0</CustomRanges2>
+        <CustomRangesText2 />
+        <CustomRanges3>0 570425344 8388608 0 0</CustomRanges3>
+        <CustomRangesText3 />
+        <CustomRanges4>0 1073741824 1048576 2 0</CustomRanges4>
+        <CustomRangesText4 />
+        <CustomRanges5>0 1107296256 33554432 2 0</CustomRanges5>
+        <CustomRangesText5 />
+        <CustomRanges6>0 1141047296 40960 2 0</CustomRanges6>
+        <CustomRangesText6 />
+        <CustomRanges7>0 3758096384 1048576 2 0</CustomRanges7>
+        <CustomRangesText7 />
+    </PlCacheRanges>
     <InterruptLog>
         <GraphEnabled>0</GraphEnabled>
         <LogEnabled>0</LogEnabled>
@@ -30,6 +105,12 @@
         <SumEnabled>0</SumEnabled>
         <ShowTimeSum>1</ShowTimeSum>
     </DataLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <Interrupts>
         <Enabled>1</Enabled>
     </Interrupts>
@@ -40,67 +121,13 @@
         <TypeViol>0</TypeViol>
         <Stop>1</Stop>
     </MemConfig>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <Simulator>
         <Freq>10000000</Freq>
         <FreqHi>0</FreqHi>
         <MultiCoreRunAll>1</MultiCoreRunAll>
     </Simulator>
-    <PlDriver>
-        <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\TexasInstruments\TM4C129ENCPDT.ddf</MemConfigValue>
-    </PlDriver>
-    <ArmDriver>
-        <EnableCache>0</EnableCache>
-    </ArmDriver>
-    <LmiFtdiDriver>
-        <LMIFTDIserialNo>0F800C15</LMIFTDIserialNo>
-        <LMIFTDIfoundProbes />
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LmiFtdiResetStyle>0</LmiFtdiResetStyle>
-        <LmiFtdiResetStrategy>0</LmiFtdiResetStrategy>
-    </LmiFtdiDriver>
-    <DebugChecksum>
-        <Checksum>934190865</Checksum>
-    </DebugChecksum>
-    <Exceptions>
-        <StopOnUncaught>_ 0</StopOnUncaught>
-        <StopOnThrow>_ 0</StopOnThrow>
-    </Exceptions>
-    <Disassembly>
-        <MixedMode>1</MixedMode>
-    </Disassembly>
-    <CallStack>
-        <ShowArgs>0</ShowArgs>
-    </CallStack>
-    <Trace2>
-        <Enabled>0</Enabled>
-        <ShowSource>0</ShowSource>
-    </Trace2>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\asm.s}.103.1" 0 0 1 "" 0 "" 0</Bp0>
-        <Count>1</Count>
-    </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
-    <CallStackLog>
-        <Enabled>0</Enabled>
-    </CallStackLog>
-    <CallStackStripe>
-        <ShowTiming>1</ShowTiming>
-    </CallStackStripe>
 </settings>

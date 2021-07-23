@@ -80,6 +80,10 @@ main
 // Usa R2 como Flags para ações
 // USA r3 PARA COMPARAÇÕES
 
+      
+
+
+        //LDR R0, =Iniciais ; ponteiro de origem
         MOV R0, #0
         LDR R3, =EstadoBotoesAnterior
         STR R0,[R3]
@@ -193,10 +197,10 @@ rotinaDeAtraso
         PUSH {R1-R10}
         //MOVT R3, #0x000F ; constante de atraso 
         MOV R3, #0x3E80
-rotinaDeAtraso_delay   CBZ R3, theend ; 1 clock
+rotinaDeAtraso_delay   CBZ R3, rotinaDeAtraso_theend ; 1 clock
         SUB R3, R3, #1 ; 1 clock
         B rotinaDeAtraso_delay ; 3 clocks
-theend  //EOR R1, R1, R2 ; troca o estado
+rotinaDeAtraso_theend  //EOR R1, R1, R2 ; troca o estado
         POP {R1-R10}
         BX LR
 ////////  fim da rotina de atraso/////////
@@ -346,15 +350,34 @@ wait	LDR R2, [R0] ; leitura do estado atual
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; seção de constantes em ROM
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
-        ASEGN .bss:DATA(2),0x20000000
+        SECTION .rodata:CONST(2)
         DATA
-EstadoBotoesAnterior   DS32 1 ; estado anterior
-EstadoBotoesAtual      DS32 1 ; estado atual
-contadorBotao          DS32 1 ;
+Iniciais   DC32 0,0,0
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; seção de variáveis não inicializadas em RAM
+;; ver arquivo de configuração do linker (my_cortex.icf)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+//        //ASEGN .bss:DATA(2),0x20000000 ; início da RAM  //  Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section bss (asm.o #8)   
+//// ASEGN é um label???
+// //       minhasvariaveis bss:DATA(2),0x20000000 ; início da RAM  // resulta em bad instruction
+// //       SECTION MYVARS :DATA(2) //  Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section MYVARS (asm.o #8)   
+//  //      SECTION MYVARS :DATA(2) ,0x20000000 //  Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section MYVARS (asm.o #8)   
+//        section .bss:DATA(2),0x20000000 ; início da RAM  // Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section .bss (asm.o #8)   
+//
+       DATA
+//EstadoBotoesAnterior   DS32 1 ; estado anterior
+//EstadoBotoesAtual      DS32 1 ; estado atual
+//contadorBotao          DS32 1 ;
+
+EstadoBotoesAnterior   .bss DS32 1 ; estado anterior
+EstadoBotoesAtual      .bss DS32 1 ; estado atual
+contadorBotao          .bss DS32 1 ;
 
          ;; Forward declaration of sections.
         SECTION CSTACK:DATA:NOROOT(3)

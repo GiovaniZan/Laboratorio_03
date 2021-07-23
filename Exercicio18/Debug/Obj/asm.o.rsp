@@ -1,0 +1,1 @@
+﻿D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\asm.s -OD:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Obj\ -s+ -M<> -w+ -r -LD:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\List\ -t8 --cpu Cortex-M4 --fpu VFPv4_sp

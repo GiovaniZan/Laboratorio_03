@@ -9,5 +9,8 @@
     <project>
         <path>$WS_DIR$\Exercicio18\Exercicio18.ewp</path>
     </project>
+    <project>
+        <path>$WS_DIR$\Teste_memoria_Kit\Teste_memoria_Kit.ewp</path>
+    </project>
     <batchBuild />
 </workspace>
