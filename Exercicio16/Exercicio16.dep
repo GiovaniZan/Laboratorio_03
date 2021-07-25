@@ -11,6 +11,7 @@
             <file>$PROJ_DIR$\Debug\List\Exercicio16.map</file>
             <file>$PROJ_DIR$\Debug\Exe\Exercicio16.out</file>
             <file>$PROJ_DIR$\Debug\Obj\asm.o</file>
+            <file>$PROJ_DIR$\..\Exercicio18\asm.s</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\asm.s</name>

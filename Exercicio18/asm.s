@@ -73,6 +73,7 @@ NOVACONTAGEM EQU 0x00000001
 NOVOBOTAO EQU 0x00000002
 NOVOBOTAOVALIDO EQU 0x00000004
 
+ContagensParaBotaoValido EQU 60 ; ajusta a velocidade de resposta do botão quanto maior, mais lento. Unidades de 10ms
         
         
 
@@ -160,7 +161,7 @@ debounceBotoes
         ADDEQ R6, #1
         MOVNE R6, #0 ; ZERA R6
         
-        CMP R6, #3
+        CMP R6, #ContagensParaBotaoValido // ajuste de velocidade de resposta
         ITTE EQ
         EOREQ R2, #NOVOBOTAOVALIDO
         EOREQ R6,R6 ; ZERA R6
