@@ -1,6 +1,13 @@
         PUBLIC  __iar_program_start
         PUBLIC  __vector_table
 
+     
+        SECTION .noinit:DATA(2) ;,0x20000000 ; início da RAM
+        DATA
+EBAt    DS32  1
+EBAnt   DS32  1
+CBo     DS32  1
+
         SECTION .text:CODE:REORDER(2)
         
         ;; Keep vector table even if it's not referenced
@@ -33,11 +40,14 @@
 
 
 
+
+__iar_program_start
+
 SYSCTL_RCGCGPIO_R       EQU     0x400FE608
 SYSCTL_PRGPIO_R		EQU     0x400FEA08
 PORTN_BIT               EQU     1000000000000b ; bit 12 = Port N
 PORTF_BIT               EQU     0000000100000b ; bit  5 = Port F
-PORTJ_BIT               EQU     0001000000000b ; bit  8 = Port F
+PORTJ_BIT               EQU     0000100000000b ; bit  8 = Port F
 LEDMASK_PORT_N          EQU     00000011b
 LEDMASK_PORT_F          EQU     00010001b
 
@@ -63,10 +73,6 @@ NOVACONTAGEM EQU 0x00000001
 NOVOBOTAO EQU 0x00000002
 NOVOBOTAOVALIDO EQU 0x00000004
 
-
-__iar_program_start
-
-main    
         
         
 
@@ -82,15 +88,16 @@ main
 
       
 
+main    
 
         //LDR R0, =Iniciais ; ponteiro de origem
         MOV R0, #0
-        LDR R3, =EstadoBotoesAnterior
-        STR R0,[R3]
-        LDR R3, =EstadoBotoesAtual
-        STR R0,[R3]
-        LDR R3, =contadorBotao
-        STR R0,[R3]
+        LDR R3, =EBAnt
+        STR R0,[R3, #0]
+        LDR R3, =EBAt
+        STR R0,[R3, #0]
+        LDR R3, =CBo
+        STR R0,[R3, #0]
         
         BL inicializacaoPortas
         
@@ -100,17 +107,21 @@ main
 main_loop
 
 
-        TEQ R2, #NOVACONTAGEM ; // CHECA SE HOUVE ALTERAÇÃO DA CONTAGEM
-        BNE cont1
-        BL AtualizaLeds ;
-cont1
         BL debounceBotoes
         //ADD R0, #1 ; adiciona 1 ao contador
         
         TEQ R2, #NOVOBOTAOVALIDO
         BNE cont2
         BL atualizaContador
+        orr R4,  R2, #NOVACONTAGEM
+        and R4, #NOVACONTAGEM
+
 cont2
+        
+        TEQ R4, #NOVACONTAGEM ; // CHECA SE HOUVE ALTERAÇÃO DA CONTAGEM
+        BNE cont1
+        BL AtualizaLeds ;
+cont1
         BIC R2, #NOVACONTAGEM ; // LIMPA FLAG DA CONTAGEM
         BL rotinaDeAtraso
 
@@ -123,24 +134,31 @@ debounceBotoes
         PUSH {R0-R1}
         PUSH {R3-R10}
         
-        LDR R3, =contadorBotao
-        LDR R6, [R3]
-        LDR R3, =EstadoBotoesAtual
-        LDR R5, [R3]
-        LDR R3, =EstadoBotoesAnterior
-        STR R5, [R3] ; ATUALIZA estado de botão
+        LDR R3, =CBo
+        LDR R6, [R3, #0]
+        LDR R3, =EBAt
+        LDR R5, [R3, #0]
+        LDR R3, =EBAnt
+        STR R5, [R3, #0] ; ATUALIZA estado de botão
         
         LDR R1, = GPIO_PORTJ_DATA_R
         MOV R9, #0x00C
         LDR R10, [R1, R9] ; LÊ PORTA j COM MASCARAMENTO
-        MVN R10, R10
-        LDR R3, =EstadoBotoesAtual
-        STR R10, [R3] ; 
+  //      MVN R10, R10
+  //      AND R10, #3
+        EOR R10, #3
+        LDR R3, =EBAt
+        STR R10, [R3, #0] ; 
+        
+                // verifica se o estado é nulo - (teclas liberadas)
+        CMP R10, #0
+        BEQ debounceBotoes_botoes_soltos
+        
         
         CMP R5,R10 ; COMPARA SE HOUVE ALTERAÇÃO
         ITE EQ
-        MOVEQ R6, #0 ; ZERA R6
-        ADDNE R6, #1
+        ADDEQ R6, #1
+        MOVNE R6, #0 ; ZERA R6
         
         CMP R6, #3
         ITTE EQ
@@ -148,9 +166,22 @@ debounceBotoes
         EOREQ R6,R6 ; ZERA R6
         BICNE R2, #NOVOBOTAOVALIDO
         
-        LDR R3, =EstadoBotoesAtual
-        STR R10, [R3]
+        LDR R3, =EBAt
+        STR R10, [R3, #0]
+
+        B debounceBotoes_saida
+
+debounceBotoes_botoes_soltos
+        MOV R6,#0 ; ZERA R6
+        BIC R2, #NOVOBOTAOVALIDO
+        LDR R3, =EBAt
+        STR R10, [R3, #0] ; 
+
         
+debounceBotoes_saida
+        LDR R3, =CBo
+        STR R6, [R3, #0]
+
         POP {R3-R10}
         POP {R0-R1}
         
@@ -162,8 +193,8 @@ debounceBotoes
 atualizaContador
         PUSH {R1-R10}
  
-        LDR R3, =EstadoBotoesAtual
-        LDR R5, [R3]
+        LDR R3, =EBAt
+        LDR R5, [R3, #0]
         
         TEQ R5, #3
         BEQ atualizaContador_Fim
@@ -258,18 +289,24 @@ AtualizaLedsPorta_X ; Leds D1, D2
 // inicializa portas utilizadas
 inicializacaoPortas
         PUSH {R0-R10} // JUST IN CASE...
+        
         MOV R2, #PORTN_BIT
         ORR R2, R2, #PORTF_BIT 
-        ORR R2, R2, #PORTJ_BIT 
-        LDR R0, =SYSCTL_RCGCGPIO_R
+         LDR R0, =SYSCTL_RCGCGPIO_R
 	LDR R1, [R0] ; leitura do estado anterior
 	ORR R1, R2 ;   habilita port N , F e J
 	STR R1, [R0] ; escrita do novo estado
 
         LDR R0, =SYSCTL_PRGPIO_R   // aguarda estabilização daporta N
-wait	LDR R2, [R0] ; leitura do estado atual
+inicializacaoPortas_wait_NF
+        LDR R2, [R0] ; leitura do estado atual
 	TEQ R1, R2 ; clock do port N , F e J habilitado?
-	BNE wait ; caso negativo, aguarda
+	BNE inicializacaoPortas_wait_NF ; caso negativo, aguarda
+        
+        
+      
+        
+        
         
         
         // prepara porta N - N1 e N0 como output
@@ -316,14 +353,30 @@ wait	LDR R2, [R0] ; leitura do estado atual
 
 
         // prepara porta J - J1 e J0 como input
-        MOV R2, #00000011b ; bit 0
-        
-        // habilita bit zero da porta J como input J0 = J1 = input
-	LDR R0, =GPIO_PORTJ_DIR_R
+        MOV R2, #PORTJ_BIT 
+        LDR R0, =SYSCTL_RCGCGPIO_R
 	LDR R1, [R0] ; leitura do estado anterior
-	BIC R1, R2 ; limpa bits
+	ORR R1, R2 ;   habilita port  J
 	STR R1, [R0] ; escrita do novo estado
 
+        LDR R0, =SYSCTL_PRGPIO_R   // aguarda estabilização daporta N
+inicializacaoPortas_wait_J
+        LDR R2, [R0] ; leitura do estado atual
+	TEQ R1, R2 ; clock do port  J habilitado?
+	BNE inicializacaoPortas_wait_J ; caso negativo, aguarda
+
+        // habilita bit zero da porta J como input J0 = J1 = input
+        MOV R2, #0
+//        LDR R0, =GPIO_PORTJ_DIR_R
+//	LDR R1, [R0] ; leitura do estado anterior
+//	STR R2, [R0] ; escrita do novo estado
+
+        LDR R0, =GPIO_PORTJ_DIR_R
+	LDR R1, [R0] ; leitura do estado anterior
+	ORR R1, R2 ; bit de saída
+	STR R1, [R0] ; escrita do novo estado
+
+        MOV R2, #00000011b ; bit 0
         //habilita porta J como digital
 	LDR R0, =GPIO_PORTJ_DEN_R
 	LDR R1, [R0] ; leitura do estado anterior
@@ -370,14 +423,30 @@ Iniciais   DC32 0,0,0
 //  //      SECTION MYVARS :DATA(2) ,0x20000000 //  Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section MYVARS (asm.o #8)   
 //        section .bss:DATA(2),0x20000000 ; início da RAM  // Fatal Error[Lp049]: there was no reference to __iar_data_init3, but it is needed to initialize section .bss (asm.o #8)   
 //
-       DATA
+
+//__iar_data_init3
+//          section  minhasvariaveis:DATA(2)    
+//          DATA
 //EstadoBotoesAnterior   DS32 1 ; estado anterior
 //EstadoBotoesAtual      DS32 1 ; estado atual
 //contadorBotao          DS32 1 ;
 
-EstadoBotoesAnterior   .bss DS32 1 ; estado anterior
-EstadoBotoesAtual      .bss DS32 1 ; estado atual
-contadorBotao          .bss DS32 1 ;
+
+//
+//EstadoBotoesAnterior   .bss DS32 1 ; estado anterior
+//EstadoBotoesAtual      .bss DS32 1 ; estado atual
+//contadorBotao          .bss DS32 1 ;
+
+
+
+//        ASEGN .bss:DATA(2),0x20000000 ; início da RAM
+//        DATA
+////EstadoBotoesAnterior   DS32 1
+////EstadoBotoesAtual   DS32  1
+////contadorBotao   DS32  1
+//EBAt   DS32 1
+//EBAnt   DS32  1
+//CBo   DS32  1
 
          ;; Forward declaration of sections.
         SECTION CSTACK:DATA:NOROOT(3)

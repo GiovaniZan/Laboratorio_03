@@ -6,33 +6,24 @@
         <name>Debug</name>
         <outputs>
             <file>$PROJ_DIR$\asm.s</file>
+            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\TM4C1292NC.icf</file>
             <file>$PROJ_DIR$\Debug\Obj\asm.o.rsp</file>
+            <file>$PROJ_DIR$\Debug\List\Exercicio16.map</file>
             <file>$PROJ_DIR$\Debug\Exe\Exercicio16.out</file>
             <file>$PROJ_DIR$\Debug\Obj\asm.o</file>
-            <file>$PROJ_DIR$\Debug\List\Exercicio16.map</file>
-            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\TM4C1292NC.icf</file>
         </outputs>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 4 2</file>
-                </tool>
-            </outputs>
-        </file>
         <file>
             <name>$PROJ_DIR$\asm.s</name>
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 3</file>
+                    <file> 5</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 1</file>
+                    <file> 2</file>
                 </tool>
             </inputs>
         </file>
@@ -41,15 +32,24 @@
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 4</file>
+                    <file> 3</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 5 3</file>
+                    <file> 1 5</file>
                 </tool>
             </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 3 4</file>
+                </tool>
+            </outputs>
         </file>
         <forcedrebuild>
             <name>[MULTI_TOOL]</name>

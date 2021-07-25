@@ -5,19 +5,34 @@
     <configuration>
         <name>Debug</name>
         <outputs>
-            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\TM4C129ENC.icf</file>
-            <file>$PROJ_DIR$\Debug\Obj\asm.o.rsp</file>
-            <file>$PROJ_DIR$\Debug\List\Exercicio17.map</file>
-            <file>$PROJ_DIR$\asm.s</file>
-            <file>$PROJ_DIR$\Debug\Obj\asm.o</file>
             <file>$PROJ_DIR$\Debug\Exe\Exercicio17.out</file>
+            <file>$PROJ_DIR$\Debug\Obj\asm.o.rsp</file>
+            <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\TM4C129ENC.icf</file>
+            <file>$PROJ_DIR$\Debug\List\Exercicio17.map</file>
+            <file>$PROJ_DIR$\Debug\Obj\asm.o</file>
+            <file>$PROJ_DIR$\asm.s</file>
         </outputs>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\Exercicio17.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 3</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 2 4</file>
+                </tool>
+            </inputs>
+        </file>
         <file>
             <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 2 5</file>
+                    <file> 3 0</file>
                 </tool>
             </outputs>
         </file>
@@ -33,21 +48,6 @@
                 <tool>
                     <name>AARM</name>
                     <file> 1</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Debug\Exe\Exercicio17.out</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 2</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 0 4</file>
                 </tool>
             </inputs>
         </file>

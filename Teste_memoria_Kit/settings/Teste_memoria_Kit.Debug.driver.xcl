@@ -2,11 +2,21 @@
 
 "--cpu=Cortex-M4" 
 
-"--fpu=None" 
+"--fpu=VFPv4_SP" 
+
+"-p" 
+
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\TexasInstruments\TM4C129ENCPDT.ddf" 
 
 "--semihosting" 
 
-"--multicore_nr_of_cores=1" 
+"--device=TM4C129ENCPDT" 
+
+"--drv_interface_speed=500" 
+
+"--drv_interface=SWD" 
+
+"--lmiftdi_reset_strategy=0,0" 
 
 
 

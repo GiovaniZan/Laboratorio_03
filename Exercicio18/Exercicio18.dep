@@ -1,52 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>736433689</fileChecksum>
+    <fileChecksum>1188313876</fileChecksum>
     <configuration>
         <name>Debug</name>
         <outputs>
+            <file>$PROJ_DIR$\asm.s</file>
+            <file>$PROJ_DIR$\Debug\Exe\Exercicio18.out</file>
+            <file>$PROJ_DIR$\Debug\List\Exercicio18.map</file>
+            <file>$PROJ_DIR$\..\Teste_memoria_Kit\asm.s</file>
             <file>$TOOLKIT_DIR$\config\generic_cortex.icf</file>
             <file>$PROJ_DIR$\Debug\Obj\asm.o.rsp</file>
-            <file>$PROJ_DIR$\asm.s</file>
-            <file>$PROJ_DIR$\Debug\List\asm.lst</file>
-            <file>$PROJ_DIR$\Debug\Exe\Exercicio18.out</file>
             <file>$PROJ_DIR$\Debug\Obj\asm.o</file>
             <file>$TOOLKIT_DIR$\config\linker\TexasInstruments\TM4C129ENC.icf</file>
-            <file>$PROJ_DIR$\..\Teste_memoria_Kit\asm.s</file>
         </outputs>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 4</file>
-                </tool>
-            </outputs>
-        </file>
         <file>
             <name>$PROJ_DIR$\asm.s</name>
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 3 5</file>
+                    <file> 6</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 1</file>
+                    <file> 5</file>
                 </tool>
             </inputs>
         </file>
         <file>
             <name>$PROJ_DIR$\Debug\Exe\Exercicio18.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 2</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 0 5</file>
+                    <file> 7 6</file>
                 </tool>
             </inputs>
         </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 1 2</file>
+                </tool>
+            </outputs>
+        </file>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\asm.s</name>
+            <tool>AARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>[MULTI_TOOL]</name>
+            <tool>ILINK</tool>
+        </forcedrebuild>
         <forcedrebuild>
             <name>[REBUILD_ALL]</name>
         </forcedrebuild>

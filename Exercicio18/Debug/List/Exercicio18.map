@@ -1,24 +1,24 @@
 ###############################################################################
 #
-# IAR ELF Linker V9.10.2.313/W64 for ARM                  23/Jul/2021  23:24:38
+# IAR ELF Linker V9.10.2.313/W64 for ARM                  25/Jul/2021  00:04:37
 # Copyright 2007-2021 IAR Systems AB.
 #
 #    Output file  =
-#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out
+#        D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Exe\Exercicio18.out
 #    Map file     =
-#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\List\Teste_memoria_Kit.map
+#        D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\List\Exercicio18.map
 #    Command line =
 #        -f
-#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out.rsp
-#        (D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj\asm.o
+#        D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Exe\Exercicio18.out.rsp
+#        (D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Obj\asm.o
 #        --no_out_extension -o
-#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Exe\Teste_memoria_Kit.out
+#        D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Exe\Exercicio18.out
 #        --redirect _Printf=_PrintfFullNoMb --redirect _Scanf=_ScanfFullNoMb
 #        --map
-#        D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\List\Teste_memoria_Kit.map
+#        D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\List\Exercicio18.map
 #        --config "C:\Program Files\IAR Systems\Embedded Workbench
 #        9.0\arm\config\linker\TexasInstruments\TM4C129ENC.icf" --semihosting
-#        --no_library_search --entry __iar_program_start --vfe --text_out
+#        --no_library_search --entry __iar_program_start --no_vfe --text_out
 #        locale)
 #
 ###############################################################################
@@ -35,38 +35,29 @@ define block HEAP with size = 64K, alignment = 8 { };
           rw, block CSTACK, block HEAP };
 do not initialize { rw section .noinit };
 
-No sections matched the following patterns:
-
-  rw  in "P2"
-
-
   Section   Kind         Address    Size  Object
   -------   ----         -------    ----  ------
 "A0":                               0x40
   .intvec   ro code          0x0    0x40  asm.o [1]
                           - 0x40    0x40
 
-"P1":                              0x21e
-  .text     ro code         0x40   0x210  asm.o [1]
-  .rodata   const          0x250     0xc  asm.o [1]
-  .text     ro code        0x25c     0x2  asm.o [1]
-                         - 0x25e   0x21e
+"P1":                              0x242
+  .text     ro code         0x40   0x234  asm.o [1]
+  .rodata   const          0x274     0xc  asm.o [1]
+  .text     ro code        0x280     0x2  asm.o [1]
+                         - 0x282   0x242
 
-Absolute sections:                   0xc
+"P2":                             0x8010
   .noinit   uninit   0x2000'0000     0xc  asm.o [1]
-                   - 0x2000'000c     0xc
-
-"P2":                             0x8000
   CSTACK             0x2000'0010  0x8000  <Block>
     CSTACK  uninit   0x2000'0010  0x8000  <Block tail>
-                   - 0x2000'8010  0x8000
+                   - 0x2000'8010  0x8010
 
 Unused ranges:
 
          From           To      Size
          ----           --      ----
-        0x25e     0xf'ffff  0xf'fda2
-  0x2000'000c  0x2000'000f       0x4
+        0x282     0xf'ffff  0xf'fd7e
   0x2000'8010  0x2003'ffff  0x3'7ff0
 
 
@@ -75,21 +66,20 @@ Unused ranges:
 *** MODULE SUMMARY
 ***
 
-    Module          ro code  ro data  rw data  rw data
-                                                (abs)
-    ------          -------  -------  -------  -------
+    Module          ro code  ro data  rw data
+    ------          -------  -------  -------
 command line/config:
-    --------------------------------------------------
+    -----------------------------------------
     Total:
 
-D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj: [1]
-    asm.o               594       12                12
-    --------------------------------------------------
-    Total:              594       12                12
+D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Obj: [1]
+    asm.o               630       12       12
+    -----------------------------------------
+    Total:              630       12       12
 
     Linker created                     32'768
-------------------------------------------------------
-    Grand Total:        594       12   32'768       12
+---------------------------------------------
+    Grand Total:        630       12   32'780
 
 
 *******************************************************************************
@@ -104,11 +94,11 @@ __iar_program_start         0x41        Code  Gb  asm.o [1]
 __vector_table               0x0        Data  Gb  asm.o [1]
 
 
-[1] = D:\utfpr_microprocessadores\Laboratorio_03\Teste_memoria_Kit\Debug\Obj
+[1] = D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\Debug\Obj
 
-     594 bytes of readonly  code memory
+     630 bytes of readonly  code memory
       12 bytes of readonly  data memory
-  32'768 bytes of readwrite data memory (+ 12 absolute)
+  32'780 bytes of readwrite data memory
 
 Errors: none
 Warnings: none

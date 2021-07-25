@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-#     IAR Assembler V9.10.2.313/W64 for ARM 23/Jul/2021  10:10:00             #
+#     IAR Assembler V9.10.2.313/W64 for ARM 23/Jul/2021  15:09:20             #
 #     Copyright 1999-2021 IAR Systems AB.                                     #
 #                                                                             #
 #           Source file   =  D:\utfpr_microprocessadores\Laboratorio_03\Exercicio18\asm.s#
@@ -16,607 +16,601 @@
 #                                                                             #
 ###############################################################################
 
-                                EstadoBotoesAnterior   .bss DS32 1 ; estado
-                        anterior
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",378  Error[40]: Bad instruction
-                                EstadoBotoesAtual      .bss DS32 1 ; estado
-                        atual
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",379  Error[40]: Bad instruction
-                                contadorBotao          .bss DS32 1 ;
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",380  Error[40]: Bad instruction
-
-
     1                                   PUBLIC  __iar_program_start
     2                                   PUBLIC  __vector_table
     3                           
-    4                                   SECTION .text:CODE:REORDER(2)
-    5                                   
-    6                                   ;; Keep vector table even if it's not
+    4                                
+    5                           
+    6                                   SECTION .text:CODE:REORDER(2)
+    7                                   
+    8                                   ;; Keep vector table even if it's not
                                  referenced
-    7                                   REQUIRE __vector_table
-    8                                   
-    9                                   THUMB
-   10                            
-   11                           
-   12                           //        
-   13                           //        Exercício 18
-   14                           //•
-   15                           //Utilize o projeto do Exercício 17 como
+    9                                   REQUIRE __vector_table
+   10                                   
+   11                                   THUMB
+   12                            
+   13                           
+   14                           //        
+   15                           //        Exercício 18
+   16                           //•
+   17                           //Utilize o projeto do Exercício 17 como
                                  base
-   16                           //para um novo programa que incremente
+   18                           //para um novo programa que incremente
                                  uma
-   17                           //contagem binária nos LEDs do kit a
+   19                           //contagem binária nos LEDs do kit a
                                  cada
-   18                           //pressionamento do botão SW1 e decremente
-   19                           //a cada pressionamento do botão SW2
-   20                           //•
-   21                           //Sugestão:
-   22                           //–
-   23                           //Pesquise e idealize uma sub rotina que
+   20                           //pressionamento do botão SW1 e decremente
+   21                           //a cada pressionamento do botão SW2
+   22                           //•
+   23                           //Sugestão:
+   24                           //–
+   25                           //Pesquise e idealize uma sub rotina que
                                  faça
-   24                           //debounce dos botões por software e
+   26                           //debounce dos botões por software e
                                  retorne
-   25                           //os seus estados para o programa principal
-   26                                   
-   27                                   
-   28                           //
-   29                           // led1 - PN1
-   30                           // led2 - PN0
-   31                           // led3 - PF4
-   32                           // led4 - PF0
-   33                           
-   34                           
+   27                           //os seus estados para o programa principal
+   28                                   
+   29                                   
+   30                           //
+   31                           // led1 - PN1
+   32                           // led2 - PN0
+   33                           // led3 - PF4
+   34                           // led4 - PF0
    35                           
-   36                           SYSCTL_RCGCGPIO_R       EQU     0x400FE608
-   37                           SYSCTL_PRGPIO_R         EQU     0x400FEA08
-   38                           PORTN_BIT               EQU     1000000000000b
+   36                           
+   37                           
+   38                           
+   39                           __iar_program_start
+   40                           
+   41                           SYSCTL_RCGCGPIO_R       EQU     0x400FE608
+   42                           SYSCTL_PRGPIO_R         EQU     0x400FEA08
+   43                           PORTN_BIT               EQU     1000000000000b
                                  ; bit 12 = Port N
-   39                           PORTF_BIT               EQU     0000000100000b
+   44                           PORTF_BIT               EQU     0000000100000b
                                  ; bit  5 = Port F
-   40                           PORTJ_BIT               EQU     0001000000000b
+   45                           PORTJ_BIT               EQU     0001000000000b
                                  ; bit  8 = Port F
-   41                           LEDMASK_PORT_N          EQU     00000011b
-   42                           LEDMASK_PORT_F          EQU     00010001b
-   43                           
-   44                           
-   45                           // endereços básicos da porta N
-   46                           GPIO_PORTN_DATA_R       EQU     0x40064000
-   47                           GPIO_PORTN_DIR_R        EQU     0x40064400
-   48                           GPIO_PORTN_DEN_R        EQU     0x4006451C
+   46                           LEDMASK_PORT_N          EQU     00000011b
+   47                           LEDMASK_PORT_F          EQU     00010001b
+   48                           
    49                           
-   50                           //endereços básicos da porta F
-   51                           GPIO_PORTF_DATA_R       EQU     0x4005D000
-   52                           GPIO_PORTF_DIR_R        EQU     0x4005D400
-   53                           GPIO_PORTF_DEN_R        EQU     0x4005D51C
+   50                           // endereços básicos da porta N
+   51                           GPIO_PORTN_DATA_R       EQU     0x40064000
+   52                           GPIO_PORTN_DIR_R        EQU     0x40064400
+   53                           GPIO_PORTN_DEN_R        EQU     0x4006451C
    54                           
-   55                           
-   56                           //endereços básicos da porta J
-   57                           GPIO_PORTJ_DATA_R       EQU     0x40060000
-   58                           GPIO_PORTJ_DIR_R        EQU     0x40060400
-   59                           GPIO_PORTJ_PUR_R        EQU     0x40060510
-   60                           GPIO_PORTJ_DEN_R        EQU     0x4006051C
-   61                           
-   62                           NOVACONTAGEM EQU 0x00000001
-   63                           NOVOBOTAO EQU 0x00000002
-   64                           NOVOBOTAOVALIDO EQU 0x00000004
-   65                           
+   55                           //endereços básicos da porta F
+   56                           GPIO_PORTF_DATA_R       EQU     0x4005D000
+   57                           GPIO_PORTF_DIR_R        EQU     0x4005D400
+   58                           GPIO_PORTF_DEN_R        EQU     0x4005D51C
+   59                           
+   60                           
+   61                           //endereços básicos da porta J
+   62                           GPIO_PORTJ_DATA_R       EQU     0x40060000
+   63                           GPIO_PORTJ_DIR_R        EQU     0x40060400
+   64                           GPIO_PORTJ_PUR_R        EQU     0x40060510
+   65                           GPIO_PORTJ_DEN_R        EQU     0x4006051C
    66                           
-   67                           __iar_program_start
-   68                           
-   69                           main    
-   70                                   
+   67                           NOVACONTAGEM EQU 0x00000001
+   68                           NOVOBOTAO EQU 0x00000002
+   69                           NOVOBOTAOVALIDO EQU 0x00000004
+   70                           
    71                                   
-   72                           
-   73                           // inicializa as portas
-   74                           // contagem de tempo para 500ms realizado no
+   72                                   
+   73                           
+   74                           // inicializa as portas
+   75                           // contagem de tempo para 500ms realizado no
                                  registrador R0
-   75                           // a cada 200ms atualiza os leds de acordo com
+   76                           // a cada 200ms atualiza os leds de acordo com
                                  o estado 
-   76                           // dos botões
-   77                           
-   78                           // usa R0 para armazenar contador
-   79                           // usa R1 para contar unidades de tempo de
+   77                           // dos botões
+   78                           
+   79                           // usa R0 para armazenar contador
+   80                           // usa R1 para contar unidades de tempo de
                                  atraso
-   80                           // Usa R2 como Flags para ações
-   81                           // USA r3 PARA COMPARAÇÕES
-   82                           
-   83                                 
-   84                           
+   81                           // Usa R2 como Flags para ações
+   82                           // USA r3 PARA COMPARAÇÕES
+   83                           
+   84                                 
    85                           
-   86                                   //LDR R0, =Iniciais ; ponteiro de
+   86                           main    
+   87                           
+   88                                   //LDR R0, =Iniciais ; ponteiro de
                                  origem
-   87    00000000 4FF00000              MOV R0, #0
-   88    00000004 6D4B                  LDR R3, =EstadoBotoesAnterior
-   89    00000006 1860                  STR R0,[R3]
-   90    00000008 6D4B                  LDR R3, =EstadoBotoesAtual
-   91    0000000A 1860                  STR R0,[R3]
-   92    0000000C 6D4B                  LDR R3, =contadorBotao
-   93    0000000E 1860                  STR R0,[R3]
-   94                                   
-   95    00000010 00F088F8              BL inicializacaoPortas
+   89    00000000 4FF00000              MOV R0, #0
+   90    00000004 6D4B                  LDR R3, =EstadoBotoesAnterior
+   91    00000006 1860                  STR R0,[R3]
+   92    00000008 6D4B                  LDR R3, =EstadoBotoesAtual
+   93    0000000A 1860                  STR R0,[R3]
+   94    0000000C 6D4B                  LDR R3, =contadorBotao
+   95    0000000E 1860                  STR R0,[R3]
    96                                   
-   97    00000014 4FF00000              MOV R0, #0 ; UTILIZADO COMO CONTADOR de
+   97    00000010 00F088F8              BL inicializacaoPortas
+   98                                   
+   99    00000014 4FF00000              MOV R0, #0 ; UTILIZADO COMO CONTADOR de
                                                     estado
-   98    00000018 4FF00001              MOV R1, #0 ; UTILIZADO COMO CONTADOR de
+  100    00000018 4FF00001              MOV R1, #0 ; UTILIZADO COMO CONTADOR de
                                                     unidades de atraso
-   99    0000001C 4FF00502              MOV R2, #5 ; UTILIZADO COMO flag para
+  101    0000001C 4FF00502              MOV R2, #5 ; UTILIZADO COMO flag para
                                                     ações do programa
-  100                           main_loop
-  101                           
-  102                           
-  103    00000020 92F0010F              TEQ R2, #NOVACONTAGEM ; // CHECA SE
+  102                           main_loop
+  103                           
+  104                           
+  105    00000020 92F0010F              TEQ R2, #NOVACONTAGEM ; // CHECA SE
                                                                HOUVE ALTERAÇÃO
                                                                DA CONTAGEM
-  104    00000024 01D1                  BNE cont1
-  105    00000026 00F04EF8              BL AtualizaLeds ;
-  106                           cont1
-  107    0000002A 00F00AF8              BL debounceBotoes
-  108                                   //ADD R0, #1 ; adiciona 1 ao
+  106    00000024 01D1                  BNE cont1
+  107    00000026 00F04EF8              BL AtualizaLeds ;
+  108                           cont1
+  109    0000002A 00F00AF8              BL debounceBotoes
+  110                                   //ADD R0, #1 ; adiciona 1 ao
                                  contador
-  109                                   
-  110    0000002E 92F0040F              TEQ R2, #NOVOBOTAOVALIDO
-  111    00000032 01D1                  BNE cont2
-  112    00000034 00F02AF8              BL atualizaContador
-  113                           cont2
-  114    00000038 22F00102              BIC R2, #NOVACONTAGEM ; // LIMPA FLAG
+  111                                   
+  112    0000002E 92F0040F              TEQ R2, #NOVOBOTAOVALIDO
+  113    00000032 01D1                  BNE cont2
+  114    00000034 00F02AF8              BL atualizaContador
+  115                           cont2
+  116    00000038 22F00102              BIC R2, #NOVACONTAGEM ; // LIMPA FLAG
                                                                DA CONTAGEM
-  115    0000003C 00F038F8              BL rotinaDeAtraso
-  116                           
-  117    00000040 EEE7                  B main_loop
-  118                           //        B       main
-  119                           
-  120                           
-  121                           /////// ROTINA PARA DEBOUNCE DE BOTÕES
+  117    0000003C 00F038F8              BL rotinaDeAtraso
+  118                           
+  119    00000040 EEE7                  B main_loop
+  120                           //        B       main
+  121                           
+  122                           
+  123                           /////// ROTINA PARA DEBOUNCE DE BOTÕES
                                  /////////
-  122                           debounceBotoes
-  123    00000042 03B4                  PUSH {R0-R1}
-  124    00000044 2DE9F807              PUSH {R3-R10}
-  125                                   
-  126    00000048 5E4B                  LDR R3, =contadorBotao
-  127    0000004A 1E68                  LDR R6, [R3]
-  128    0000004C 5C4B                  LDR R3, =EstadoBotoesAtual
-  129    0000004E 1D68                  LDR R5, [R3]
-  130    00000050 5A4B                  LDR R3, =EstadoBotoesAnterior
-  131    00000052 1D60                  STR R5, [R3] ; ATUALIZA estado de
+  124                           debounceBotoes
+  125    00000042 03B4                  PUSH {R0-R1}
+  126    00000044 2DE9F807              PUSH {R3-R10}
+  127                                   
+  128    00000048 5E4B                  LDR R3, =contadorBotao
+  129    0000004A 1E68                  LDR R6, [R3]
+  130    0000004C 5C4B                  LDR R3, =EstadoBotoesAtual
+  131    0000004E 1D68                  LDR R5, [R3]
+  132    00000050 5A4B                  LDR R3, =EstadoBotoesAnterior
+  133    00000052 1D60                  STR R5, [R3] ; ATUALIZA estado de
                                                       botão
-  132                                   
-  133    00000054 5C49                  LDR R1, = GPIO_PORTJ_DATA_R
-  134    00000056 4FF00C09              MOV R9, #0x00C
-  135    0000005A 51F809A0              LDR R10, [R1, R9] ; LÊ PORTA j COM
+  134                                   
+  135    00000054 5C49                  LDR R1, = GPIO_PORTJ_DATA_R
+  136    00000056 4FF00C09              MOV R9, #0x00C
+  137    0000005A 51F809A0              LDR R10, [R1, R9] ; LÊ PORTA j COM
                                                            MASCARAMENTO
-  136    0000005E 6FEA0A0A              MVN R10, R10
-  137    00000062 574B                  LDR R3, =EstadoBotoesAtual
-  138    00000064 C3F800A0              STR R10, [R3] ; 
-  139                                   
-  140    00000068 5545                  CMP R5,R10 ; COMPARA SE HOUVE
+  138    0000005E 6FEA0A0A              MVN R10, R10
+  139    00000062 574B                  LDR R3, =EstadoBotoesAtual
+  140    00000064 C3F800A0              STR R10, [R3] ; 
+  141                                   
+  142    00000068 5545                  CMP R5,R10 ; COMPARA SE HOUVE
                                                     ALTERAÇÃO
-  141    0000006A 0CBF                  ITE EQ
-  142    0000006C 0026                  MOVEQ R6, #0 ; ZERA R6
-  143    0000006E 0136                  ADDNE R6, #1
-  144                                   
-  145    00000070 032E                  CMP R6, #3
-  146    00000072 06BF                  ITTE EQ
-  147    00000074 82F00402              EOREQ R2, #NOVOBOTAOVALIDO
-  148    00000078 7640                  EOREQ R6,R6 ; ZERA R6
-  149    0000007A 22F00402              BICNE R2, #NOVOBOTAOVALIDO
-  150                                   
-  151    0000007E 504B                  LDR R3, =EstadoBotoesAtual
-  152    00000080 C3F800A0              STR R10, [R3]
-  153                                   
-  154    00000084 BDE8F807              POP {R3-R10}
-  155    00000088 03BC                  POP {R0-R1}
-  156                                   
-  157    0000008A 7047                  BX LR
-  158                           ////////////////////////////////////////
-  159                           
-  160                           /////// ROTINA PARA ATUALIZAR CONTADOR
-                                 /////////////
+  143    0000006A 0CBF                  ITE EQ
+  144    0000006C 0026                  MOVEQ R6, #0 ; ZERA R6
+  145    0000006E 0136                  ADDNE R6, #1
+  146                                   
+  147    00000070 032E                  CMP R6, #3
+  148    00000072 06BF                  ITTE EQ
+  149    00000074 82F00402              EOREQ R2, #NOVOBOTAOVALIDO
+  150    00000078 7640                  EOREQ R6,R6 ; ZERA R6
+  151    0000007A 22F00402              BICNE R2, #NOVOBOTAOVALIDO
+  152                                   
+  153    0000007E 504B                  LDR R3, =EstadoBotoesAtual
+  154    00000080 C3F800A0              STR R10, [R3]
+  155                                   
+  156    00000084 BDE8F807              POP {R3-R10}
+  157    00000088 03BC                  POP {R0-R1}
+  158                                   
+  159    0000008A 7047                  BX LR
+  160                           ////////////////////////////////////////
   161                           
-  162                           atualizaContador
-  163    0000008C 2DE9FE07              PUSH {R1-R10}
-  164                            
-  165    00000090 4B4B                  LDR R3, =EstadoBotoesAtual
-  166    00000092 1D68                  LDR R5, [R3]
-  167                                   
-  168    00000094 95F0030F              TEQ R5, #3
-  169    00000098 07D0                  BEQ atualizaContador_Fim
-  170                           
-  171                           
-  172    0000009A 022D                  CMP R5, #2
-  173    0000009C 01D1                  BNE atualizaContador_teste2
-  174    0000009E 00F10100              ADD R0, #1
-  175                                   
-  176                           atualizaContador_teste2        
-  177    000000A2 012D                  CMP R5, #1
-  178    000000A4 01D1                  BNE atualizaContador_Fim
-  179    000000A6 A0F10100              SUB r0, #1
-  180                                   
-  181                           atualizaContador_Fim
-  182                            
-  183                            
-  184    000000AA BDE8FE07              POP {R1-R10}
-  185    000000AE 7047                  BX LR
-  186                           
-  187                           ////////////////////////////////////
+  162                           /////// ROTINA PARA ATUALIZAR CONTADOR
+                                 /////////////
+  163                           
+  164                           atualizaContador
+  165    0000008C 2DE9FE07              PUSH {R1-R10}
+  166                            
+  167    00000090 4B4B                  LDR R3, =EstadoBotoesAtual
+  168    00000092 1D68                  LDR R5, [R3]
+  169                                   
+  170    00000094 95F0030F              TEQ R5, #3
+  171    00000098 07D0                  BEQ atualizaContador_Fim
+  172                           
+  173                           
+  174    0000009A 022D                  CMP R5, #2
+  175    0000009C 01D1                  BNE atualizaContador_teste2
+  176    0000009E 00F10100              ADD R0, #1
+  177                                   
+  178                           atualizaContador_teste2        
+  179    000000A2 012D                  CMP R5, #1
+  180    000000A4 01D1                  BNE atualizaContador_Fim
+  181    000000A6 A0F10100              SUB r0, #1
+  182                                   
+  183                           atualizaContador_Fim
+  184                            
+  185                            
+  186    000000AA BDE8FE07              POP {R1-R10}
+  187    000000AE 7047                  BX LR
   188                           
-  189                           
+  189                           ////////////////////////////////////
   190                           
   191                           
   192                           
   193                           
-  194                           //////// rotina de atraso/////////
-  195                           ///// 10-ms /////// para o debounce ///
-  196                           rotinaDeAtraso
-  197    000000B0 2DE9FE07              PUSH {R1-R10}
-  198                                   //MOVT R3, #0x000F ; constante de
+  194                           
+  195                           
+  196                           //////// rotina de atraso/////////
+  197                           ///// 10-ms /////// para o debounce ///
+  198                           rotinaDeAtraso
+  199    000000B0 2DE9FE07              PUSH {R1-R10}
+  200                                   //MOVT R3, #0x000F ; constante de
                                  atraso 
-  199    000000B4 4FF47A53              MOV R3, #0x3E80
-  200    000000B8 13B1          rotinaDeAtraso_delay   CBZ R3, rotinaDeAtraso_t
+  201    000000B4 4FF47A53              MOV R3, #0x3E80
+  202    000000B8 13B1          rotinaDeAtraso_delay   CBZ R3, rotinaDeAtraso_t
                                                                 heend ; 1
                                                                  clock
-  201    000000BA A3F10103              SUB R3, R3, #1 ; 1 clock
-  202    000000BE FBE7                  B rotinaDeAtraso_delay ; 3 clocks
-  203                           rotinaDeAtraso_theend  //EOR R1, R1, R2 ;
+  203    000000BA A3F10103              SUB R3, R3, #1 ; 1 clock
+  204    000000BE FBE7                  B rotinaDeAtraso_delay ; 3 clocks
+  205                           rotinaDeAtraso_theend  //EOR R1, R1, R2 ;
                                  troca o estado
-  204    000000C0 BDE8FE07              POP {R1-R10}
-  205    000000C4 7047                  BX LR
-  206                           ////////  fim da rotina de atraso/////////
-  207                           
-  208                           
+  206    000000C0 BDE8FE07              POP {R1-R10}
+  207    000000C4 7047                  BX LR
+  208                           ////////  fim da rotina de atraso/////////
   209                           
-  210                           ////////////// rotina de atualização dos leds
+  210                           
+  211                           
+  212                           ////////////// rotina de atualização dos leds
                                  ///////////////////
-  211                           // rotina de atualização de leds, conformecont
+  213                           // rotina de atualização de leds, conformecont
                                 ador em R0
-  212                           AtualizaLeds
-  213                           // L4  L3  L2  L1  -> SEQUENCIADE LEDS 
+  214                           AtualizaLeds
+  215                           // L4  L3  L2  L1  -> SEQUENCIADE LEDS 
                                  
-  214                           // F0  F4  N0  N1  -> PORTA
-  215                           // B3  B2  B1  B0  -> BIT DO CONTADOR
-  216                           // B0  B4  B0  B1  -> BIT NA PORTA
-  217    000000C6 2DE9FE07              PUSH {R1-R10}
-  218    000000CA 00B5                  PUSH {LR}
-  219    000000CC 4FF00102              MOV R2, #1
-  220    000000D0 4FF00203              MOV R3, #2
-  221    000000D4 4FF01004              MOV R4, #16
-  222                                  // MOV R5, #0X08
-  223                           
-  224                                   // PREPARA REGISTRADORES PARA PORTA
+  216                           // F0  F4  N0  N1  -> PORTA
+  217                           // B3  B2  B1  B0  -> BIT DO CONTADOR
+  218                           // B0  B4  B0  B1  -> BIT NA PORTA
+  219    000000C6 2DE9FE07              PUSH {R1-R10}
+  220    000000CA 00B5                  PUSH {LR}
+  221    000000CC 4FF00102              MOV R2, #1
+  222    000000D0 4FF00203              MOV R3, #2
+  223    000000D4 4FF01004              MOV R4, #16
+  224                                  // MOV R5, #0X08
+  225                           
+  226                                   // PREPARA REGISTRADORES PARA PORTA
                                  N
-  225    000000D8 02EA5006              AND R6, R2, R0, LSR #1 ; DETERMINA O
+  227    000000D8 02EA5006              AND R6, R2, R0, LSR #1 ; DETERMINA O
                                                                 LED 0 - PN1
                                                                 
-  226    000000DC 03EA4007              AND R7, R3, R0, LSL #1 ; DETERMINA O
+  228    000000DC 03EA4007              AND R7, R3, R0, LSL #1 ; DETERMINA O
                                                                 LED 1 -
                                                                 PN0
-  227    000000E0 47EA0607              ORR R7, R7, R6
-  228    000000E4 3949                  LDR R1, = GPIO_PORTN_DATA_R
-  229    000000E6 6FF00308              MVN R8, #LEDMASK_PORT_N
-  230    000000EA 00F010F8              BL AtualizaLedsPorta_X
-  231                           
-  232                            //       ORR R7, R7 ; LIMPA R7
-  233                             //      ORR R6,R6
-  234    000000EE 04EA8006              AND R6, R4 ,R0, LSL #2 ; DETERINA O LED
+  229    000000E0 47EA0607              ORR R7, R7, R6
+  230    000000E4 3949                  LDR R1, = GPIO_PORTN_DATA_R
+  231    000000E6 6FF00308              MVN R8, #LEDMASK_PORT_N
+  232    000000EA 00F010F8              BL AtualizaLedsPorta_X
+  233                           
+  234                            //       ORR R7, R7 ; LIMPA R7
+  235                             //      ORR R6,R6
+  236    000000EE 04EA8006              AND R6, R4 ,R0, LSL #2 ; DETERINA O LED
                                                                 2 - PF4
-  235    000000F2 02EAD007              AND R7, R2, R0, LSR #3 ; DETERMINA O
+  237    000000F2 02EAD007              AND R7, R2, R0, LSR #3 ; DETERMINA O
                                                                 LED 3 -
                                                                 PF0
-  236    000000F6 47EA0607              ORR R7, R7, R6
-  237    000000FA 3549                  LDR R1, = GPIO_PORTF_DATA_R
-  238    000000FC 6FF01108              MVN R8, #LEDMASK_PORT_F
-  239    00000100 00F005F8              BL AtualizaLedsPorta_X
-  240                           
-  241    00000104 5DF804EB              POP {LR}
-  242    00000108 BDE8FE07              POP {R1-R10}
-  243    0000010C 7047                  BX LR
-  244                           
-  245                           
-  246                           AtualizaLedsPorta_X ; Leds D1, D2
-  247    0000010E 4FF47F79              MOV R9, #0x3FC
-  248    00000112 51F809A0              LDR R10, [R1, R9]
-  249    00000116 0AEA080A              AND R10, R8 // ELIMINA OS BITS NÃO
+  238    000000F6 47EA0607              ORR R7, R7, R6
+  239    000000FA 3549                  LDR R1, = GPIO_PORTF_DATA_R
+  240    000000FC 6FF01108              MVN R8, #LEDMASK_PORT_F
+  241    00000100 00F005F8              BL AtualizaLedsPorta_X
+  242                           
+  243    00000104 5DF804EB              POP {LR}
+  244    00000108 BDE8FE07              POP {R1-R10}
+  245    0000010C 7047                  BX LR
+  246                           
+  247                           
+  248                           AtualizaLedsPorta_X ; Leds D1, D2
+  249    0000010E 4FF47F79              MOV R9, #0x3FC
+  250    00000112 51F809A0              LDR R10, [R1, R9]
+  251    00000116 0AEA080A              AND R10, R8 // ELIMINA OS BITS NÃO
                                                    ENVOLVIDOS
-  250    0000011A 4AEA070A              ORR R10, R7 // AJUSTA OS BITS
+  252    0000011A 4AEA070A              ORR R10, R7 // AJUSTA OS BITS
                                                    ADEQUADOS
-  251    0000011E 41F809A0              STR R10, [R1, R9]
-  252    00000122 7047                  BX LR
-  253                           
-  254                           ////////////// fim da rotina de atualização
-                                 dos leds ///////////////////
+  253    0000011E 41F809A0              STR R10, [R1, R9]
+  254    00000122 7047                  BX LR
   255                           
-  256                           
-  257                           ////////// rotina de inicialiação das portas
+  256                           ////////////// fim da rotina de atualização
+                                 dos leds ///////////////////
+  257                           
+  258                           
+  259                           ////////// rotina de inicialiação das portas
                                  ///////////////
-  258                           // inicializa portas utilizadas
-  259                           inicializacaoPortas
-  260    00000124 2DE9FF07              PUSH {R0-R10} // JUST IN CASE...
-  261    00000128 4FF48052              MOV R2, #PORTN_BIT
-  262    0000012C 42F02002              ORR R2, R2, #PORTF_BIT 
-  263    00000130 42F40072              ORR R2, R2, #PORTJ_BIT 
-  264    00000134 2748                  LDR R0, =SYSCTL_RCGCGPIO_R
-  265    00000136 0168                  LDR R1, [R0] ; leitura do estado
+  260                           // inicializa portas utilizadas
+  261                           inicializacaoPortas
+  262    00000124 2DE9FF07              PUSH {R0-R10} // JUST IN CASE...
+  263    00000128 4FF48052              MOV R2, #PORTN_BIT
+  264    0000012C 42F02002              ORR R2, R2, #PORTF_BIT 
+  265    00000130 42F40072              ORR R2, R2, #PORTJ_BIT 
+  266    00000134 2748                  LDR R0, =SYSCTL_RCGCGPIO_R
+  267    00000136 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  266    00000138 41EA0201              ORR R1, R2 ;   habilita port N , F e
+  268    00000138 41EA0201              ORR R1, R2 ;   habilita port N , F e
                                                     J
-  267    0000013C 0160                  STR R1, [R0] ; escrita do novo
+  269    0000013C 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  268                           
-  269    0000013E 2648                  LDR R0, =SYSCTL_PRGPIO_R   // aguarda
+  270                           
+  271    0000013E 2648                  LDR R0, =SYSCTL_PRGPIO_R   // aguarda
                                                   estabilização daporta
                                                   N
-  270    00000140 0268          wait    LDR R2, [R0] ; leitura do estado
+  272    00000140 0268          wait    LDR R2, [R0] ; leitura do estado
                                                       atual
-  271    00000142 91EA020F              TEQ R1, R2 ; clock do port N , F e J
+  273    00000142 91EA020F              TEQ R1, R2 ; clock do port N , F e J
                                                     habilitado?
-  272    00000146 FBD1                  BNE wait ; caso negativo, aguarda
-  273                                   
-  274                                   
-  275                                   // prepara porta N - N1 e N0 como
+  274    00000146 FBD1                  BNE wait ; caso negativo, aguarda
+  275                                   
+  276                                   
+  277                                   // prepara porta N - N1 e N0 como
                                  output
-  276    00000148 4FF00302              MOV R2, #00000011b ; bit 0
-  277                                   
-  278                                   // habilita bit zero da porta N como
+  278    00000148 4FF00302              MOV R2, #00000011b ; bit 0
+  279                                   
+  280                                   // habilita bit zero da porta N como
                                  saída N0=out
-  279    0000014C 2348                  LDR R0, =GPIO_PORTN_DIR_R
-  280    0000014E 0168                  LDR R1, [R0] ; leitura do estado
+  281    0000014C 2348                  LDR R0, =GPIO_PORTN_DIR_R
+  282    0000014E 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  281    00000150 41EA0201              ORR R1, R2 ; bit de saída
-  282    00000154 0160                  STR R1, [R0] ; escrita do novo
+  283    00000150 41EA0201              ORR R1, R2 ; bit de saída
+  284    00000154 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  283                           
-  284                                   //habilita porta N como digital
-  285    00000156 2248                  LDR R0, =GPIO_PORTN_DEN_R
-  286    00000158 0168                  LDR R1, [R0] ; leitura do estado
+  285                           
+  286                                   //habilita porta N como digital
+  287    00000156 2248                  LDR R0, =GPIO_PORTN_DEN_R
+  288    00000158 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  287    0000015A 41EA0201              ORR R1, R2 ; habilita função digital
-  288    0000015E 0160                  STR R1, [R0] ; escrita do novo
+  289    0000015A 41EA0201              ORR R1, R2 ; habilita função digital
+  290    0000015E 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  289                           
-  290                                   // INICIALIZA PORTA N, escreve sem ler
+  291                           
+  292                                   // INICIALIZA PORTA N, escreve sem ler
                                  antes
-  291    00000160 4FF00004              MOV R4, #0
-  292    00000164 1948                  LDR R0, = GPIO_PORTN_DATA_R
-  293    00000166 4FF47F72              MOV R2, #0x3FC ; deslocamento para
+  293    00000160 4FF00004              MOV R4, #0
+  294    00000164 1948                  LDR R0, = GPIO_PORTN_DATA_R
+  295    00000166 4FF47F72              MOV R2, #0x3FC ; deslocamento para
                                                         acesso sem mascaramento
-  294    0000016A 8450                  STR R4, [R0, R2]; coloca na porta Nsem
+  296    0000016A 8450                  STR R4, [R0, R2]; coloca na porta Nsem
                                                          mascaramento, o
                                                          registrador R4
-  295                           
-  296                                   // prepara porta F - F4 e F0 como
+  297                           
+  298                                   // prepara porta F - F4 e F0 como
                                  output
-  297    0000016C 4FF01102              MOV R2, #00010001b ; bit 0
-  298                           
-  299                                   // habilita bit zero da porta F como
+  299    0000016C 4FF01102              MOV R2, #00010001b ; bit 0
+  300                           
+  301                                   // habilita bit zero da porta F como
                                  saída N0=out
-  300    00000170 1C48                  LDR R0, =GPIO_PORTF_DIR_R
-  301    00000172 0168                  LDR R1, [R0] ; leitura do estado
+  302    00000170 1C48                  LDR R0, =GPIO_PORTF_DIR_R
+  303    00000172 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  302    00000174 41EA0201              ORR R1, R2 ; bit de saída
-  303    00000178 0160                  STR R1, [R0] ; escrita do novo
+  304    00000174 41EA0201              ORR R1, R2 ; bit de saída
+  305    00000178 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  304                           
-  305                                   //habilita porta F como digital
-  306    0000017A 1B48                  LDR R0, =GPIO_PORTF_DEN_R
-  307    0000017C 0168                  LDR R1, [R0] ; leitura do estado
+  306                           
+  307                                   //habilita porta F como digital
+  308    0000017A 1B48                  LDR R0, =GPIO_PORTF_DEN_R
+  309    0000017C 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  308    0000017E 41EA0201              ORR R1, R2 ; habilita função digital
-  309    00000182 0160                  STR R1, [R0] ; escrita do novo
+  310    0000017E 41EA0201              ORR R1, R2 ; habilita função digital
+  311    00000182 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  310                           
-  311                                // INICIALIZA PORTA F, escreve sem ler
+  312                           
+  313                                // INICIALIZA PORTA F, escreve sem ler
                                  antes
-  312                               //  MOV R4, #0
-  313    00000184 1248                  LDR R0, = GPIO_PORTF_DATA_R
-  314                               //  MOV R2, #0x3FC ; deslocamento para
+  314                               //  MOV R4, #0
+  315    00000184 1248                  LDR R0, = GPIO_PORTF_DATA_R
+  316                               //  MOV R2, #0x3FC ; deslocamento para
                                  acesso sem mascaramento
-  315    00000186 8450                  STR R4, [R0, R2]; coloca na porta Nsem
+  317    00000186 8450                  STR R4, [R0, R2]; coloca na porta Nsem
                                                          mascaramento, o
                                                          registrador R4
-  316                           
-  317                           
-  318                                   // prepara porta J - J1 e J0 como
+  318                           
+  319                           
+  320                                   // prepara porta J - J1 e J0 como
                                  input
-  319    00000188 4FF00302              MOV R2, #00000011b ; bit 0
-  320                                   
-  321                                   // habilita bit zero da porta J como
+  321    00000188 4FF00302              MOV R2, #00000011b ; bit 0
+  322                                   
+  323                                   // habilita bit zero da porta J como
                                  input J0 = J1 = input
-  322    0000018C 1748                  LDR R0, =GPIO_PORTJ_DIR_R
-  323    0000018E 0168                  LDR R1, [R0] ; leitura do estado
+  324    0000018C 1748                  LDR R0, =GPIO_PORTJ_DIR_R
+  325    0000018E 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  324    00000190 21EA0201              BIC R1, R2 ; limpa bits
-  325    00000194 0160                  STR R1, [R0] ; escrita do novo
+  326    00000190 21EA0201              BIC R1, R2 ; limpa bits
+  327    00000194 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  326                           
-  327                                   //habilita porta J como digital
-  328    00000196 1648                  LDR R0, =GPIO_PORTJ_DEN_R
-  329    00000198 0168                  LDR R1, [R0] ; leitura do estado
+  328                           
+  329                                   //habilita porta J como digital
+  330    00000196 1648                  LDR R0, =GPIO_PORTJ_DEN_R
+  331    00000198 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  330    0000019A 41EA0201              ORR R1, R2 ; habilita função digital
-  331    0000019E 0160                  STR R1, [R0] ; escrita do novo
+  332    0000019A 41EA0201              ORR R1, R2 ; habilita função digital
+  333    0000019E 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  332                           
-  333                                   //habilita Pull Ups na porta
+  334                           
+  335                                   //habilita Pull Ups na porta
                                  J
-  334    000001A0 1448                  LDR R0, =GPIO_PORTJ_PUR_R
-  335    000001A2 0168                  LDR R1, [R0] ; leitura do estado
+  336    000001A0 1448                  LDR R0, =GPIO_PORTJ_PUR_R
+  337    000001A2 0168                  LDR R1, [R0] ; leitura do estado
                                                       anterior
-  336    000001A4 41EA0201              ORR R1, R2 ; habilita função digital
-  337    000001A8 0160                  STR R1, [R0] ; escrita do novo
+  338    000001A4 41EA0201              ORR R1, R2 ; habilita função digital
+  339    000001A8 0160                  STR R1, [R0] ; escrita do novo
                                                       estado
-  338                           
-  339                                   // INICIALIZA PORTA J, escreve sem ler
+  340                           
+  341                                   // INICIALIZA PORTA J, escreve sem ler
                                  antes
-  340    000001AA 4FF00004              MOV R4, #0
-  341    000001AE 0648                  LDR R0, = GPIO_PORTJ_DATA_R
-  342    000001B0 4FF47F72              MOV R2, #0x3FC ; deslocamento para
+  342    000001AA 4FF00004              MOV R4, #0
+  343    000001AE 0648                  LDR R0, = GPIO_PORTJ_DATA_R
+  344    000001B0 4FF47F72              MOV R2, #0x3FC ; deslocamento para
                                                         acesso sem mascaramento
-  343    000001B4 8450                  STR R4, [R0, R2]; coloca na porta Nsem
+  345    000001B4 8450                  STR R4, [R0, R2]; coloca na porta Nsem
                                                          mascaramento, o
                                                          registrador R4
-  344                           
-  345    000001B6 BDE8FF07              POP {R0-R10}
-  346    000001BA 7047                  BX LR
-  347                           ////////// fim da  rotina de inicialiação das
+  346                           
+  347    000001B6 BDE8FF07              POP {R0-R10}
+  348    000001BA 7047                  BX LR
+  349                           ////////// fim da  rotina de inicialiação das
                                  portas ///////////////
-  348                           
-  349                           
   350                           
   351                           
   352                           
-  353                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                ;;;;;;
-  354                           ;; seção de constantes em ROM
+  353                           
+  354                           
   355                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                 ;;;;;;
-  356                           
-  356.1                                  TABLE.32
-  356.2  000001BC ........              Reference on line 88,130
-  356.3  000001C0 ........              Reference on line 90,128,137,151,165
-  356.4  000001C4 ........              Reference on line 92,126
-  356.5  000001C8 00000640              Reference on line 133,341
-  356.6  000001CC 00400640              Reference on line 228,292
-  356.7  000001D0 00D00540              Reference on line 237,313
-  356.8  000001D4 08E60F40              Reference on line 264
-  356.9  000001D8 08EA0F40              Reference on line 269
-  356.10 000001DC 00440640              Reference on line 279
-  356.11 000001E0 1C450640              Reference on line 285
-  356.12 000001E4 00D40540              Reference on line 300
-  356.13 000001E8 1CD50540              Reference on line 306
-  356.14 000001EC 00040640              Reference on line 322
-  356.15 000001F0 1C050640              Reference on line 328
-  356.16 000001F4 10050640              Reference on line 334
-  357                                   SECTION .rodata:CONST(2)
-  358                                   DATA
-  359    00000000 0000000000000 Iniciais   DC32 0,0,0
+  356                           ;; seção de constantes em ROM
+  357                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                ;;;;;;
+  358                           
+  358.1                                  TABLE.32
+  358.2  000001BC ........              Reference on line 90,132
+  358.3  000001C0 ........              Reference on line 92,130,139,153,167
+  358.4  000001C4 ........              Reference on line 94,128
+  358.5  000001C8 00000640              Reference on line 135,343
+  358.6  000001CC 00400640              Reference on line 230,294
+  358.7  000001D0 00D00540              Reference on line 239,315
+  358.8  000001D4 08E60F40              Reference on line 266
+  358.9  000001D8 08EA0F40              Reference on line 271
+  358.10 000001DC 00440640              Reference on line 281
+  358.11 000001E0 1C450640              Reference on line 287
+  358.12 000001E4 00D40540              Reference on line 302
+  358.13 000001E8 1CD50540              Reference on line 308
+  358.14 000001EC 00040640              Reference on line 324
+  358.15 000001F0 1C050640              Reference on line 330
+  358.16 000001F4 10050640              Reference on line 336
+  359                                   SECTION .rodata:CONST(2)
+  360                                   DATA
+  361    00000000 0000000000000 Iniciais   DC32 0,0,0
                   00000000000  
-  360                           
-  361                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  362                           
+  363                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                 ;;;;;;
-  362                           ;; seção de variáveis não inicializadas em
+  364                           ;; seção de variáveis não inicializadas em
                                  RAM
-  363                           ;; ver arquivo de configuração do linker
+  365                           ;; ver arquivo de configuração do linker
                                  (my_cortex.icf)
-  364                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  366                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                 ;;;;;;
-  365                           
-  366                           //        //ASEGN .bss:DATA(2),0x20000000 ;
+  367                           
+  368                           //        //ASEGN .bss:DATA(2),0x20000000 ;
                                  início da RAM  //  Fatal Error[Lp049]: there
                                  was no reference to __iar_data_init3, but it
                                  is needed to initialize section bss (asm.o #8)
                                    
-  367                           //// ASEGN é um label???
-  368                           // //       minhasvariaveis bss:DATA(2),0x2000
+  369                           //// ASEGN é um label???
+  370                           // //       minhasvariaveis bss:DATA(2),0x2000
                                 0000 ; início da RAM  // resulta em bad
                                  instruction
-  369                           // //       SECTION MYVARS :DATA(2) //  Fatal
+  371                           // //       SECTION MYVARS :DATA(2) //  Fatal
                                  Error[Lp049]: there was no reference to
                                  __iar_data_init3, but it is needed to
                                  initialize section MYVARS (asm.o #8)  
                                  
-  370                           //  //      SECTION MYVARS :DATA(2) ,0x2000000
+  372                           //  //      SECTION MYVARS :DATA(2) ,0x2000000
                                 0 //  Fatal Error[Lp049]: there was no
                                  reference to __iar_data_init3, but it is
                                  needed to initialize section MYVARS (asm.o #8)
                                    
-  371                           //        section .bss:DATA(2),0x20000000 ;
+  373                           //        section .bss:DATA(2),0x20000000 ;
                                  início da RAM  // Fatal Error[Lp049]: there
                                  was no reference to __iar_data_init3, but it
                                  is needed to initialize section .bss (asm.o
                                  #8)   
-  372                           //
-  373                           //        DATA
-  374                           //EstadoBotoesAnterior   DS32 1 ; estado
+  374                           //
+  375                           
+  376                           //__iar_data_init3
+  377                           //          section  minhasvariaveis:DATA(2)  
+                                  
+  378                           //          DATA
+  379                           //EstadoBotoesAnterior   DS32 1 ; estado
                                  anterior
-  375                           //EstadoBotoesAtual      DS32 1 ; estado
+  380                           //EstadoBotoesAtual      DS32 1 ; estado
                                  atual
-  376                           //contadorBotao          DS32 1 ;
-  377                           
-                                EstadoBotoesAnterior   .bss DS32 1 ; estado
-                        anterior
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",378  Error[40]: Bad instruction
-                                EstadoBotoesAtual      .bss DS32 1 ; estado
-                        atual
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",379  Error[40]: Bad instruction
-                                contadorBotao          .bss DS32 1 ;
-                                --------------------------^
-                                "D:\utfpr_microprocessadores\Laboratorio_03\Ex
-                       ercicio18\asm.s",380  Error[40]: Bad instruction
-  381                           
-  382                                    ;; Forward declaration of sections.
-  383                                   SECTION CSTACK:DATA:NOROOT(3)
-  384                                   SECTION .intvec:CODE:NOROOT(2)
-  385                                   
-  386                                   DATA
-  387                           
-  388                           __vector_table
-  389    00000000 ........              DCD     sfe(CSTACK)
-  390    00000004 ........              DCD     __iar_program_start
-  391                           
-  392    00000008 ........              DCD     NMI_Handler
-  393    0000000C ........              DCD     HardFault_Handler
-  394    00000010 ........              DCD     MemManage_Handler
-  395    00000014 ........              DCD     BusFault_Handler
-  396    00000018 ........              DCD     UsageFault_Handler
-  397    0000001C 00000000              DCD     0
-  398    00000020 00000000              DCD     0
-  399    00000024 00000000              DCD     0
-  400    00000028 00000000              DCD     0
-  401    0000002C ........              DCD     SVC_Handler
-  402    00000030 ........              DCD     DebugMon_Handler
-  403    00000034 00000000              DCD     0
-  404    00000038 ........              DCD     PendSV_Handler
-  405    0000003C ........              DCD     SysTick_Handler
+  381                           //contadorBotao          DS32 1 ;
+  382                           
+  383                           
+  384                           //
+  385                           //EstadoBotoesAnterior   .bss DS32 1 ; estado
+                                 anterior
+  386                           //EstadoBotoesAtual      .bss DS32 1 ; estado
+                                 atual
+  387                           //contadorBotao          .bss DS32 1
+                                 ;
+  388                           
+  389                           
+  390                           
+  391                                   ASEGN .bss:DATA(2),0x20000000 ; início
+                                 da RAM
+  392                                   DATA
+  393                           EstadoBotoesAnterior   DS32 1
+  394                           EstadoBotoesAtual   DS32  1
+  395                           contadorBotao   DS32  1
+  396                           
+  397                                    ;; Forward declaration of sections.
+  398                                   SECTION CSTACK:DATA:NOROOT(3)
+  399                                   SECTION .intvec:CODE:NOROOT(2)
+  400                                   
+  401                                   DATA
+  402                           
+  403                           __vector_table
+  404    00000000 ........              DCD     sfe(CSTACK)
+  405    00000004 ........              DCD     __iar_program_start
   406                           
-  407                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                ;;;;;;
-  408                           ;;
-  409                           ;; Default interrupt handlers.
-  410                           ;;
-  411                           
-  412                                   PUBWEAK NMI_Handler
-  413                                   PUBWEAK HardFault_Handler
-  414                                   PUBWEAK MemManage_Handler
-  415                                   PUBWEAK BusFault_Handler
-  416                                   PUBWEAK UsageFault_Handler
-  417                                   PUBWEAK SVC_Handler
-  418                                   PUBWEAK DebugMon_Handler
-  419                                   PUBWEAK PendSV_Handler
-  420                                   PUBWEAK SysTick_Handler
+  407    00000008 ........              DCD     NMI_Handler
+  408    0000000C ........              DCD     HardFault_Handler
+  409    00000010 ........              DCD     MemManage_Handler
+  410    00000014 ........              DCD     BusFault_Handler
+  411    00000018 ........              DCD     UsageFault_Handler
+  412    0000001C 00000000              DCD     0
+  413    00000020 00000000              DCD     0
+  414    00000024 00000000              DCD     0
+  415    00000028 00000000              DCD     0
+  416    0000002C ........              DCD     SVC_Handler
+  417    00000030 ........              DCD     DebugMon_Handler
+  418    00000034 00000000              DCD     0
+  419    00000038 ........              DCD     PendSV_Handler
+  420    0000003C ........              DCD     SysTick_Handler
   421                           
-  422                                   SECTION .text:CODE:REORDER:NOROOT(1)
-  423                                   THUMB
-  424                           
-  425                           NMI_Handler
-  426                           HardFault_Handler
-  427                           MemManage_Handler
-  428                           BusFault_Handler
-  429                           UsageFault_Handler
-  430                           SVC_Handler
-  431                           DebugMon_Handler
-  432                           PendSV_Handler
-  433                           SysTick_Handler
-  434                           Default_Handler
-  435                           __default_handler
-  436                                   CALL_GRAPH_ROOT __default_handler,
-                                 "interrupt"
-  437                                   NOCALL __default_handler
-  438    00000000 FEE7                  B __default_handler
+  422                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                ;;;;;;
+  423                           ;;
+  424                           ;; Default interrupt handlers.
+  425                           ;;
+  426                           
+  427                                   PUBWEAK NMI_Handler
+  428                                   PUBWEAK HardFault_Handler
+  429                                   PUBWEAK MemManage_Handler
+  430                                   PUBWEAK BusFault_Handler
+  431                                   PUBWEAK UsageFault_Handler
+  432                                   PUBWEAK SVC_Handler
+  433                                   PUBWEAK DebugMon_Handler
+  434                                   PUBWEAK PendSV_Handler
+  435                                   PUBWEAK SysTick_Handler
+  436                           
+  437                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  438                                   THUMB
   439                           
-  440                                   END
+  440                           NMI_Handler
+  441                           HardFault_Handler
+  442                           MemManage_Handler
+  443                           BusFault_Handler
+  444                           UsageFault_Handler
+  445                           SVC_Handler
+  446                           DebugMon_Handler
+  447                           PendSV_Handler
+  448                           SysTick_Handler
+  449                           Default_Handler
+  450                           __default_handler
+  451                                   CALL_GRAPH_ROOT __default_handler,
+                                 "interrupt"
+  452                                   NOCALL __default_handler
+  453    00000000 FEE7                  B __default_handler
+  454                           
+  455                                   END
 ##############################
-#        Errors:   3         #
+#           CRC:0            #
+#        Errors:   0         #
 #        Warnings: 0         #
-#         Bytes: 582         #
+#         Bytes: 594         #
 ##############################
 
 
